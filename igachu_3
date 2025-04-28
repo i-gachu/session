@@ -8,6 +8,8 @@ from pocketoptionapi.stable_api import PocketOption
 import pocketoptionapi.global_value as global_value
 from sklearn.ensemble import RandomForestClassifier
 
+###RED PROFILE 5MINS WITH TP####
+
 # Load environment variables
 load_dotenv()
 
