@@ -31,4 +31,4 @@ jobs:
       env:
         SSID: ${{ secrets.SSID }}
       run: |
-        python i_gachu_2.py
+        python igachu_3.py
