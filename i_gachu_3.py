@@ -27,7 +27,7 @@ INITIAL_AMOUNT = 1
 MARTINGALE_LEVEL = 4
 MIN_ACTIVE_PAIRS = 2
 PROB_THRESHOLD = 0.76
-TAKE_PROFIT = 5  # <-- Take profit target in dollars
+TAKE_PROFIT = 20  # <-- Take profit target in dollars
 current_profit = 0  # <-- Current cumulative profit
 
 WATCHLIST = [
