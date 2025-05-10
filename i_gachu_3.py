@@ -223,7 +223,7 @@ def wait_for_candle_start():
 
 # ✅ New timeout check function
 def near_github_timeout():
-    return (time.perf_counter() - start_counter) >= (6 * 3600 - 20 * 60)
+    return (time.perf_counter() - start_counter) >= (6 * 3600 - 14 * 60)
 
 # Strategy loop
 def strategie():
