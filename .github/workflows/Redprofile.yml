@@ -1,4 +1,4 @@
-name: Suit
+name: Redprofile
 
 on:
   workflow_dispatch:    # Manual run
