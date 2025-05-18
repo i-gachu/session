@@ -174,10 +174,8 @@ def martingale_strategy(pair, action):
 
     if result[1] == 'win':
         current_profit += amount * (global_value.pairs[pair]['payout'] / 100)
-        global_value.logger(f"✅ WIN - Profit: {current_profit:.2f} USD", "INFO")
     else:
         current_profit -= amount
-        global_value.logger(f"❌ LOSS - Profit: {current_profit:.2f} USD", "INFO")
 
     while result[1] == 'loose' and level < MARTINGALE_LEVEL:
         level += 1
@@ -275,6 +273,7 @@ def strategie():
             wait_for_candle_start()
             martingale_strategy(pair, decision)
 
+            wait_until_next_candle(period, 60)
             get_payout()
             get_df()
 
