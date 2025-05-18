@@ -1,4 +1,4 @@
-name: OsObTrend
+name: Suit
 
 on:
   workflow_dispatch:    # Manual run
