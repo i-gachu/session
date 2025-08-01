@@ -1,7 +1,9 @@
+import os
 import time
 import json
 import pandas as pd
 from datetime import datetime, timezone, timedelta
+from dotenv import load_dotenv
 from pocketoptionapi.stable_api import PocketOption
 import pocketoptionapi.global_value as global_value
 from sklearn.ensemble import RandomForestClassifier
@@ -10,24 +12,30 @@ from sklearn.ensemble import RandomForestClassifier
 ###RESIPOTORY 6 HOUR LIMIT, avoid ob and os, with trend###
 
 # Load environment variables
+load_dotenv()
 
 # Session configuration
 start_counter = time.perf_counter()
 
-ssid ='42["auth",{"session":"7onedcpaoiv8natb8jl7vp2728","isDemo":1,"uid":73357779,"platform":2,"isFastHistory":true,"isOptimized":true}]'
-
+ssid = os.getenv("""SSID""")
 demo = True
 
 # Bot Settings
-min_payout = 10
-period = 300 
+min_payout = 80
+period = 300  
 expiration = 300
 INITIAL_AMOUNT = 1
-MARTINGALE_LEVEL = 3
-MIN_ACTIVE_PAIRS = 4
-PROB_THRESHOLD = 0.77
+MARTINGALE_LEVEL = 4
+MIN_ACTIVE_PAIRS = 5
+PROB_THRESHOLD = 0.76
 TAKE_PROFIT = 20  # <-- Take profit target in dollars
 current_profit = 0  # <-- Current cumulative profit
+
+WATCHLIST = [
+    "GBPAUD_otc", "GBPJPY_otc", "GBPUSD_otc",
+    "AUDUSD_otc", "AUDCAD_otc", "CADCHF_otc",
+    "USDCHF_otc", "USDJPY_otc", "USDCAD_otc",
+]
 
 # Connect to Pocket Option
 api = PocketOption(ssid, demo)
@@ -42,27 +50,18 @@ def get_payout():
         for pair in d:
             name = pair[1]
             payout = pair[5]
-            is_active = pair[14]
-            market_type = pair[3]  # digital or turbo
-
-            # Filter all OTC pairs with acceptable payout
             if (
+                name in WATCHLIST and
+                pair[14] and
                 name.endswith("_otc") and
-                is_active and
-                len(name) == 10 and
-                payout >= min_payout
+                len(name) == 10
             ):
-                global_value.pairs[name] = {
-                    'payout': payout,
-                    'type': market_type
-                }
-            else:
-                # Remove if no longer meets criteria
-                if name in global_value.pairs:
+                if payout >= min_payout:
+                    global_value.pairs[name] = {'payout': payout, 'type': pair[3]}
+                elif name in global_value.pairs:
                     del global_value.pairs[name]
         return True
-    except Exception as e:
-        print(f"Error fetching payouts: {e}")
+    except:
         return False
 
 def get_df():
